@@ -1,9 +1,11 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   useReactTable,
   getCoreRowModel,
   flexRender,
   ColumnDef,
+  getSortedRowModel,
+  SortingState,
 } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { Satellite } from '../types/satellite';
@@ -15,23 +17,25 @@ interface SatelliteTableProps {
 }
 
 const columns: ColumnDef<Satellite>[] = [
-  {header: 'ID',cell: (info) => info.row.index + 1,size: 60,},
   { accessorKey: 'name', header: 'Name', size: 200 },
   { accessorKey: 'noradCatId', header: 'NORAD ID', size: 100 },
   { accessorKey: 'orbitCode', header: 'Orbit Code', size: 60 },
-  // { accessorKey: 'objectType', header: 'Object Type', size: 120 },
-  // { accessorKey: 'countryCode', header: 'Country', size: 100 },
-  // { accessorKey: 'launchDate', header: 'Launch Date', size: 120 },
+  { accessorKey: 'objectType', header: 'Object Type', size: 120 },
+  { accessorKey: 'countryCode', header: 'Country', size: 100 },
+  { accessorKey: 'launchDate', header: 'Launch Date', size: 120 },
 ];
 
 export const SatelliteTable: React.FC<SatelliteTableProps> = ({ data, loading, error }) => {
 
-  console.log({data})
+  const [sorting, setSorting] = useState<SortingState>([{ id: 'name', desc: false }]);
   
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    onSortingChange: setSorting,
+    state: { sorting }
   });
   
   const parentRef = useRef<HTMLDivElement>(null);
@@ -39,7 +43,7 @@ export const SatelliteTable: React.FC<SatelliteTableProps> = ({ data, loading, e
   const rowVirtualizer = useVirtualizer({
     count: table.getRowModel().rows.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 40, // average row height in px
+    estimateSize: () => 10, 
     overscan: 5,
   });
   
@@ -50,8 +54,8 @@ export const SatelliteTable: React.FC<SatelliteTableProps> = ({ data, loading, e
   if (error) return <div className="text-center text-red-500 py-4">Error: {error}</div>;
   
   return (
-    <div className="w-full">
-      <div className="overflow-x-auto">
+    <div className="w-full overflow-x-auto" style={{ maxWidth: '100%' }}>
+      <div style={{ minWidth: '1000px'  }}>
         <table className="w-full border-collapse">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -59,10 +63,11 @@ export const SatelliteTable: React.FC<SatelliteTableProps> = ({ data, loading, e
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="p-2 bg-gray-100 text-left"
+                    className="p-2 bg-gray-100 text-left whitespace-nowrap cursor-pointer select-none"
                     onClick={header.column.getToggleSortingHandler()}
                   >
                     {flexRender(header.column.columnDef.header, header.getContext())}
+                    {{ asc: '▲', desc: '▼'}[header.column.getIsSorted() as string] ?? null }
                   </th>
                 ))}
               </tr>
@@ -71,11 +76,10 @@ export const SatelliteTable: React.FC<SatelliteTableProps> = ({ data, loading, e
         </table>
       </div>
 
-      {/* Virtualized Table Body */}
       <div
         ref={parentRef}
         className="overflow-auto"
-        style={{ maxHeight: '500px', position: 'relative' }}
+        style={{ minWidth: '1000px', maxHeight: '500px', position: 'relative' }}
       >
         <div style={{ height: `${totalSize}px`, position: 'relative' }}>
           {virtualRows.map((virtualRow) => {
@@ -89,16 +93,20 @@ export const SatelliteTable: React.FC<SatelliteTableProps> = ({ data, loading, e
                   transform: `translateY(${virtualRow.start}px)`,
                   width: '100%',
                   display: 'table',
-                  tableLayout: 'fixed',
+                  tableLayout: 'fixed'
                 }}
               >
                 <div className="table-row">
-                  {row.getVisibleCells().map((cell) => (
-                    <div key={cell.id} className="table-cell p-2 border-b">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </div>
-                  ))}
+                  {row.getVisibleCells().map((cell) => {
+                    const value = cell.getValue();
+                       return (
+                         <div key={cell.id} className="table-cell p-2 border-b">
+                          {value === null || value === undefined || value === '' || value == 'UNKNOWN' ? '—' : flexRender(cell.column.columnDef.cell, cell.getContext())}
+                         </div>
+                    );
+                    })}
                 </div>
+
               </div>
             );
           })}

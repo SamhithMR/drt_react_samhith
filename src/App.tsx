@@ -6,7 +6,8 @@ import { SatelliteTable } from './components/SatelliteTable';
 import './App.css';
 
 function App() {
-  const { data, loading, error, updateFilters } = useSatellites();
+  const { data, loading, error, updateFilters } = useSatellites({attributes: ['noradCatId', 'intlDes', 'name', 'launchDate', 'decayDate', 'objectType', 'launchSiteCode', 'countryCode',
+'orbitCode']});
   
   return (
     <div className="min-h-screen bg-gray-50 p-6">
