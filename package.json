@@ -4,14 +4,13 @@
   "private": true,
   "dependencies": {
     "@tanstack/react-table": "^8.21.3",
+    "@tanstack/react-virtual": "^3.13.10",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.126",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
     "axios": "^1.9.0",
     "lodash.debounce": "^4.0.8",
     "react": "^19.1.0",
@@ -20,8 +19,6 @@
     "react-router-dom": "^7.6.2",
     "react-scripts": "5.0.1",
     "react-select": "^5.10.1",
-    "react-virtual": "^2.10.4",
-    "tailwindcss": "^4.1.10",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
@@ -48,5 +45,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/babel__core": "^7.20.5",
+    "@types/react-dom": "^19.1.6",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.5"
   }
 }
