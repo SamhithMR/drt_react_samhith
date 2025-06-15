@@ -80,6 +80,22 @@ npm start
 
 The application will be available at `http://localhost:3000`
 
+## 🛠️ How It Works
+
+- On page load, all satellite data is fetched and displayed in a virtualized table.
+- Users can:
+  - **Search** by satellite name or NORAD ID (search triggers only on hitting `Enter`).
+  - **Apply filters** like object type and orbit code using dropdowns.
+- The table updates dynamically based on search or filter inputs.
+- Each row has a **checkbox** to select satellites (maximum 10).
+- Selected satellites are:
+  - Persisted in `localStorage`
+  - Counted and shown at the top
+  - Preserved on page refresh
+- When the **Proceed** button is clicked:
+  - The app navigates to a second page
+  - Displays selected satellite `name` and `noradCatId`
+
 
 ## 🔗 Live Demo
 

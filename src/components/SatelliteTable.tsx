@@ -74,6 +74,7 @@ export const SatelliteTable: React.FC<SatelliteTableProps> = ({
         {selectionError && (
           <span className="text-red-500 text-sm">{selectionError}</span>
         )}
+        <span>total rows: {table.getRowModel().rows.length}</span>
       </div>
 
       <div style={{ minWidth: "1000px" }}>
