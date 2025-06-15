@@ -42,7 +42,7 @@ export const Filters: React.FC<FiltersProps> = ({ onFilter }) => {
   const handleApply = () => {
     onFilter({
       objectTypes: selectedObjectTypes,
-      attributes: ['noradCatId', 'intlDes', 'name', 'launchDate', 'decayDate', 'objectType', 'launchSiteCode', 'countryCode', 'orbitCode'],
+      orbitCodes: selectedOrbitCodes,
     });
   };
 

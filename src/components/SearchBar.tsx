@@ -5,12 +5,12 @@ interface SearchBarProps {
   onSearch: (searchText: string) => void;
 }
 
-export const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
+export const SearchBar = () => {
   const [searchText, setSearchText] = useState('');
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && searchText.trim()) {
-      onSearch(searchText.trim());
+     
     }
   };
 

@@ -26,15 +26,9 @@ export const useSatellites = (initialFilters: FilterParams = {}) => {
     fetchSatellitesData();
   }, [filters]); 
 
-
-  const updateFilters = (newFilters: Partial<FilterParams>) => {
-    setFilters(prev => ({ ...prev, ...newFilters }));
-  };
-
   return {
     data,
     loading,
     error,
-    updateFilters,
   };
 };

@@ -22,5 +22,6 @@ export interface SatelliteResponse {
 export interface FilterParams {
   objectTypes?: ObjectType[];
   attributes?: string[];
+  orbitCodes?: OrbitCode[];
 }
 

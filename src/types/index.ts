@@ -15,4 +15,5 @@ export type SelectOption = {
 export interface FilterParams {
   objectTypes?: ObjectType[];
   attributes?: string[];
+  OrbitCode?: OrbitCode[];
 }
