@@ -6,8 +6,7 @@ import { SatelliteTable } from './components/SatelliteTable';
 import './App.css';
 
 function App() {
-  const { data, loading, error, updateFilters } = useSatellites({attributes: ['noradCatId', 'intlDes', 'name', 'launchDate', 'decayDate', 'objectType', 'launchSiteCode', 'countryCode',
-'orbitCode']});
+  const { data, loading, error, updateFilters } = useSatellites({attributes: ['noradCatId', 'intlDes', 'name', 'launchDate', 'decayDate', 'objectType', 'launchSiteCode', 'countryCode', 'orbitCode']});
   
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -19,10 +18,7 @@ function App() {
         </div>
 
         <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold">Filters</h2>
-            <Filters onFilter={updateFilters} />
-          </div>
+          <Filters onFilter={updateFilters} />
           
           <SatelliteTable 
             data={data} 

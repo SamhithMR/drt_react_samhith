@@ -43,7 +43,7 @@ export const SatelliteTable: React.FC<SatelliteTableProps> = ({ data, loading, e
   const rowVirtualizer = useVirtualizer({
     count: table.getRowModel().rows.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 10, 
+    estimateSize: () => 40, 
     overscan: 5,
   });
   
@@ -60,10 +60,11 @@ export const SatelliteTable: React.FC<SatelliteTableProps> = ({ data, loading, e
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id} className="border-b">
-                {headerGroup.headers.map((header) => (
+                {headerGroup.headers.map((header, i) => (
                   <th
                     key={header.id}
                     className="p-2 bg-gray-100 text-left whitespace-nowrap cursor-pointer select-none"
+                     style={i === 0 ? { width: '16rem' } : {}}
                     onClick={header.column.getToggleSortingHandler()}
                   >
                     {flexRender(header.column.columnDef.header, header.getContext())}
@@ -97,15 +98,22 @@ export const SatelliteTable: React.FC<SatelliteTableProps> = ({ data, loading, e
                 }}
               >
                 <div className="table-row">
-                  {row.getVisibleCells().map((cell) => {
-                    const value = cell.getValue();
-                       return (
-                         <div key={cell.id} className="table-cell p-2 border-b">
-                          {value === null || value === undefined || value === '' || value == 'UNKNOWN' ? '—' : flexRender(cell.column.columnDef.cell, cell.getContext())}
-                         </div>
-                    );
-                    })}
-                </div>
+  {row.getVisibleCells().map((cell, i) => {
+  const value = cell.getValue();
+  return (
+    <div
+      key={cell.id}
+      className={`table-cell p-2 border-b ${i === 0 ? 'w-64 min-w-[16rem] max-w-[20rem]' : ''}`}
+      style={i === 0 ? { width: '16rem' } : {}}
+    >
+      {value === null || value === undefined || value === '' || value == 'UNKNOWN'
+        ? '—'
+        : flexRender(cell.column.columnDef.cell, cell.getContext())}
+    </div>
+  );
+})}
+
+</div>
 
               </div>
             );
