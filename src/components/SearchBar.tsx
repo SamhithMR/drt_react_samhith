@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { useSatellites } from '../hooks/useSatellites';
+import React, { useState } from "react";
+import { useSatellites } from "../hooks/useSatellites";
 
 interface SearchBarProps {
   onSearch: (searchText: string) => void;
 }
 
-export const SearchBar = () => {
-  const [searchText, setSearchText] = useState('');
+export const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
+  const [searchText, setSearchText] = useState("");
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && searchText.trim()) {
-     
+    if (e.key === "Enter") {
+      onSearch(searchText);
     }
   };
 

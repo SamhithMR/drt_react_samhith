@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { fetchSatellites } from '../utils/api';
-import { FilterParams, Satellite, SatelliteResponse } from '../types/satellite';
+import { useState, useEffect } from "react";
+import { fetchSatellites } from "../utils/api";
+import { FilterParams, Satellite, SatelliteResponse } from "../types/satellite";
 
 export const useSatellites = (initialFilters: FilterParams = {}) => {
   const [filters, setFilters] = useState<FilterParams>(initialFilters);
@@ -13,18 +13,18 @@ export const useSatellites = (initialFilters: FilterParams = {}) => {
       try {
         setLoading(true);
         setError(null);
-        console.log("feching data")
+        console.log("feching data");
         const response = await fetchSatellites(filters);
         setData(response.data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
+        setError(err instanceof Error ? err.message : "An error occurred");
       } finally {
         setLoading(false);
       }
     };
-    
+
     fetchSatellitesData();
-  }, [filters]); 
+  }, [filters]);
 
   return {
     data,
