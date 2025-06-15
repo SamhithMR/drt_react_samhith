@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useSatellites } from "./hooks/useSatellites";
 import { SearchBar } from "./components/SearchBar";
 import { Filters } from "./components/Filters";
+import { Routes, Route } from 'react-router-dom';
 import { SatelliteTable } from "./components/SatelliteTable";
+import SelectedPage from "./pages/SelectedPage";
+
 import {
   ObjectType,
   OrbitCode,
@@ -13,7 +16,7 @@ import {
 import "./App.css";
 
 function App() {
-  let { data, loading, error } = useSatellites({
+  const { data, loading, error } = useSatellites({
     attributes: [
       "noradCatId",
       "intlDes",
@@ -58,7 +61,6 @@ function App() {
   }, [data, searchText, filterParams]);
 
   const handleFilter = (filters: FilterParams) => {
-    console.log(filters);
     setFilterParams(filters);
   };
 
@@ -71,14 +73,17 @@ function App() {
       <div className="max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold mb-6">Satellite Tracking System</h1>
 
-        <div className="bg-white rounded-lg shadow p-6 mb-6">
+        <div className="bg-white rounded-lg shadow p-2 mb-6">
           <SearchBar onSearch={handleSearch} />
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-lg shadow p-2">
           <Filters onFilter={handleFilter} />
 
-          <SatelliteTable data={filteredData} loading={loading} error={error} />
+          <Routes>
+            <Route path="/" element={<SatelliteTable data={filteredData} loading={loading} error={error} />} />
+            <Route path="/selected" element={<SelectedPage />} />
+          </Routes>
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   useReactTable,
   getCoreRowModel,
@@ -42,6 +43,11 @@ export const SatelliteTable: React.FC<SatelliteTableProps> = ({
     { id: "name", desc: false },
   ]);
 
+  const [selectedRows, setSelectedRows] = useState<Satellite[]>(() =>
+    JSON.parse(localStorage.getItem("selectedSatellites") || "[]")
+  );
+  const [selectionError, setSelectionError] = useState("");
+
   const table = useReactTable({
     data,
     columns,
@@ -50,6 +56,13 @@ export const SatelliteTable: React.FC<SatelliteTableProps> = ({
     onSortingChange: setSorting,
     state: { sorting },
   });
+
+  const navigate = useNavigate();
+
+  const handleProceed = () => {
+    localStorage.setItem("selectedSatellites", JSON.stringify(selectedRows));
+    navigate("/selected");
+  };
 
   const parentRef = useRef<HTMLDivElement>(null);
 
@@ -122,6 +135,13 @@ export const SatelliteTable: React.FC<SatelliteTableProps> = ({
 
   return (
     <div className="w-full overflow-x-auto" style={{ maxWidth: "100%" }}>
+      <div className="flex items-center justify-between my-2">
+        <span className="text-sm">Selected: {selectedRows.length} / 10</span>
+        {selectionError && (
+          <span className="text-red-500 text-sm">{selectionError}</span>
+        )}
+      </div>
+
       <div style={{ minWidth: "1000px" }}>
         <table className="w-full border-collapse">
           <thead>
@@ -157,6 +177,26 @@ export const SatelliteTable: React.FC<SatelliteTableProps> = ({
         <div style={{ height: `${totalSize}px`, position: "relative" }}>
           {virtualRows.map((virtualRow) => {
             const row = table.getRowModel().rows[virtualRow.index];
+
+            const isSelected = selectedRows.some(
+              (r) => r.noradCatId === row.original.noradCatId
+            );
+
+            const handleCheckboxChange = () => {
+              const alreadySelected = isSelected;
+              if (!alreadySelected && selectedRows.length >= 10) {
+                setSelectionError("You can select a maximum of 10 rows.");
+                return;
+              }
+
+              setSelectionError("");
+              setSelectedRows((prev) =>
+                alreadySelected
+                  ? prev.filter((r) => r.noradCatId !== row.original.noradCatId)
+                  : [...prev, row.original]
+              );
+            };
+
             return (
               <div
                 key={row.id}
@@ -172,6 +212,29 @@ export const SatelliteTable: React.FC<SatelliteTableProps> = ({
                 <div className="table-row">
                   {row.getVisibleCells().map((cell, i) => {
                     const value = cell.getValue();
+                    const isSelected = selectedRows.some(
+                      (r) => r.noradCatId === row.original.noradCatId
+                    );
+
+                    const handleCheckboxChange = () => {
+                      const alreadySelected = isSelected;
+                      if (!alreadySelected && selectedRows.length >= 10) {
+                        setSelectionError(
+                          "You can select a maximum of 10 rows."
+                        );
+                        return;
+                      }
+
+                      setSelectionError("");
+                      setSelectedRows((prev) =>
+                        alreadySelected
+                          ? prev.filter(
+                              (r) => r.noradCatId !== row.original.noradCatId
+                            )
+                          : [...prev, row.original]
+                      );
+                    };
+
                     return (
                       <div
                         key={cell.id}
@@ -180,15 +243,34 @@ export const SatelliteTable: React.FC<SatelliteTableProps> = ({
                         }`}
                         style={i === 0 ? { width: "16rem" } : {}}
                       >
-                        {value === null ||
-                        value === undefined ||
-                        value === "" ||
-                        value == "UNKNOWN"
-                          ? "—"
-                          : flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )}
+                        {i === 0 ? (
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={handleCheckboxChange}
+                            />
+                            {value === null ||
+                            value === undefined ||
+                            value === "" ||
+                            value == "UNKNOWN"
+                              ? "—"
+                              : flexRender(
+                                  cell.column.columnDef.cell,
+                                  cell.getContext()
+                                )}
+                          </div>
+                        ) : value === null ||
+                          value === undefined ||
+                          value === "" ||
+                          value == "UNKNOWN" ? (
+                          "—"
+                        ) : (
+                          flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )
+                        )}
                       </div>
                     );
                   })}
@@ -197,6 +279,16 @@ export const SatelliteTable: React.FC<SatelliteTableProps> = ({
             );
           })}
         </div>
+      </div>
+
+      <div className=" m-2">
+        <button
+          className="ml-auto block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+          onClick={handleProceed}
+          disabled={selectedRows.length === 0}
+        >
+          Proceed
+        </button>
       </div>
     </div>
   );
