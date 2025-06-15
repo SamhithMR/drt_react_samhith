@@ -1,5 +1,3 @@
-import { table } from "console";
-
 export const TableSekeleton = () => {
   return (
     <div className="w-full overflow-x-auto" style={{ maxWidth: "100%" }}>

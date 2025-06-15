@@ -9,7 +9,6 @@ import SelectedPage from "./pages/SelectedPage";
 
 import {
   ObjectType,
-  OrbitCode,
   FilterParams,
   Satellite,
 } from "./types/satellite";

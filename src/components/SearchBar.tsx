@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useSatellites } from "../hooks/useSatellites";
 
 interface SearchBarProps {
   onSearch: (searchText: string) => void;

@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { fetchSatellites } from "../utils/api";
-import { FilterParams, Satellite, SatelliteResponse } from "../types/satellite";
+import { FilterParams, Satellite } from "../types/satellite";
 
 export const useSatellites = (initialFilters: FilterParams = {}) => {
-  const [filters, setFilters] = useState<FilterParams>(initialFilters);
+  const [filters] = useState<FilterParams>(initialFilters);
   const [data, setData] = useState<Satellite[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

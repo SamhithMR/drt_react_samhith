@@ -1,8 +1,8 @@
 // SatelliteTableBody.tsx
 import React from "react";
-import { flexRender, Table } from "@tanstack/react-table";
+import { flexRender } from "@tanstack/react-table";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { Satellite, SatelliteTableBodyProps } from "../types/satellite";
+import { SatelliteTableBodyProps } from "../types/satellite";
 
 export const SatelliteTableBody: React.FC<SatelliteTableBodyProps> = ({
   table,
@@ -84,7 +84,7 @@ export const SatelliteTableBody: React.FC<SatelliteTableBodyProps> = ({
                           {value === null ||
                           value === undefined ||
                           value === "" ||
-                          value == "UNKNOWN"
+                          value === "UNKNOWN"
                             ? "—"
                             : flexRender(
                                 cell.column.columnDef.cell,
@@ -94,7 +94,7 @@ export const SatelliteTableBody: React.FC<SatelliteTableBodyProps> = ({
                       ) : value === null ||
                         value === undefined ||
                         value === "" ||
-                        value == "UNKNOWN" ? (
+                        value === "UNKNOWN" ? (
                         "—"
                       ) : (
                         flexRender(
