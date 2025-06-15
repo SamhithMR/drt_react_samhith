@@ -25,3 +25,12 @@ export interface FilterParams {
   orbitCodes?: OrbitCode[];
 }
 
+export interface FiltersProps {
+  onFilter: (filters: FilterParams) => void;
+}
+
+export interface SatelliteTableProps {
+  data: Satellite[];
+  loading: boolean;
+  error: string | null;
+}

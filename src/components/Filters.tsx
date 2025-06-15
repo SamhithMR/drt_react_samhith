@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import Select from "react-select";
-import { ObjectType, OrbitCode, FilterParams } from "../types/satellite";
+import { ObjectType, OrbitCode, FiltersProps } from "../types/satellite";
 
-interface FiltersProps {
-  onFilter: (filters: FilterParams) => void;
-}
 
 const objectTypesOptions = [
   { value: "ROCKET BODY", label: "Rocket Body" },

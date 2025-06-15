@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useSatellites } from "./hooks/useSatellites";
+import debounce from "lodash/debounce";
 import { SearchBar } from "./components/SearchBar";
 import { Filters } from "./components/Filters";
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route } from "react-router-dom";
 import { SatelliteTable } from "./components/SatelliteTable";
 import SelectedPage from "./pages/SelectedPage";
 
@@ -40,24 +41,31 @@ function App() {
       return;
     }
 
-    const newData = data.filter((obj) => {
-      const matchesObjectType =
-        !filterParams.objectTypes?.length ||
-        filterParams.objectTypes.includes(obj.objectType as ObjectType);
+    const debouncedFilter = debounce(() => {
+      const newData = data.filter((obj) => {
+        const matchesObjectType =
+          !filterParams.objectTypes?.length ||
+          filterParams.objectTypes.includes(obj.objectType as ObjectType);
 
-      const matchesOrbitCode =
-        !filterParams.orbitCodes?.length ||
-        filterParams.orbitCodes.some((item) => obj.orbitCode?.includes(item));
+        const matchesOrbitCode =
+          !filterParams.orbitCodes?.length ||
+          filterParams.orbitCodes.some((item) => obj.orbitCode?.includes(item));
 
-      const matchesSearch =
-        !searchText ||
-        obj.noradCatId?.toLowerCase().includes(searchText.toLowerCase()) ||
-        obj.name?.toLowerCase().includes(searchText.toLowerCase());
+        const matchesSearch =
+          !searchText ||
+          obj.noradCatId?.toLowerCase().includes(searchText.toLowerCase()) ||
+          obj.name?.toLowerCase().includes(searchText.toLowerCase());
 
-      return matchesObjectType && matchesOrbitCode && matchesSearch;
-    });
+        return matchesObjectType && matchesOrbitCode && matchesSearch;
+      });
 
-    setFilteredData(newData);
+      setFilteredData(newData);
+    }, 300);
+    debouncedFilter();
+
+    return () => {
+      debouncedFilter.cancel();
+    };
   }, [data, searchText, filterParams]);
 
   const handleFilter = (filters: FilterParams) => {
@@ -81,7 +89,16 @@ function App() {
           <Filters onFilter={handleFilter} />
 
           <Routes>
-            <Route path="/" element={<SatelliteTable data={filteredData} loading={loading} error={error} />} />
+            <Route
+              path="/"
+              element={
+                <SatelliteTable
+                  data={filteredData}
+                  loading={loading}
+                  error={error}
+                />
+              }
+            />
             <Route path="/selected" element={<SelectedPage />} />
           </Routes>
         </div>
